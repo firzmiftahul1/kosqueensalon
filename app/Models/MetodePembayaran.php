@@ -27,4 +27,8 @@ class MetodePembayaran extends Model
     {
         return $this->hasMany(TransaksiPembayaran::class, 'id_metode', 'id_metode');
     }
+
+    public function metodePembayaran() {
+    return $this->belongsTo(MetodePembayaran::class);
+}
 }
