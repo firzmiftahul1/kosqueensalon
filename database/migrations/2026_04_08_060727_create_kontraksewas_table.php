@@ -11,26 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kontraksewa', function (Blueprint $table) {
-            // Menggunakan id() sebagai Primary Key (id_kontrak)
-            $table->id('id_kontrak'); 
-            
-            // Foreign Key ke tabel penghuni
-            $table->unsignedBigInteger('id_penghuni');
-            
-            // Foreign Key ke tabel kamar
-            $table->unsignedBigInteger('id_kamar');
-            
-            $table->date('tanggal_mulai');
-            $table->date('tanggal_selesai');
-            $table->string('status', 50); // Contoh: Aktif, Selesai, Dibatalkan
-            
+        Schema::create('kontrak_sewas', function (Blueprint $table) {
+            $table->id();
+            $table->string('kode_kontrak', 10)->unique();
+            $table->unsignedBigInteger('penghuni_id');
+            $table->unsignedBigInteger('kamar_id');
+            $table->date('tanggal_masuk');
+            $table->date('tanggal_keluar')->nullable();
+            $table->decimal('harga_sewa', 12, 2);
+            $table->enum('status_kontrak', ['aktif', 'selesai'])->default('aktif');
             $table->timestamps();
-
-            // Definisi Relasi (Foreign Key Constraints)
-            // Pastikan tabel 'penghuni' dan 'kamar' sudah dibuat sebelumnya
-            $table->foreign('id_penghuni')->references('id_penghuni')->on('penghuni')->onDelete('cascade');
-            $table->foreign('id_kamar')->references('id_kamar')->on('kamar')->onDelete('cascade');
         });
     }
 
@@ -39,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kontraksewa');
+        Schema::dropIfExists('kontrak_sewas');
     }
 };

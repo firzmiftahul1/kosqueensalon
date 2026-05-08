@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
+use App\Models\Penghuni;
+use App\Models\KontrakSewa;
 
 class TransaksiPembayaran extends Model
 {
@@ -47,6 +48,16 @@ class TransaksiPembayaran extends Model
     public function metodePembayaran()
     {
         return $this->belongsTo(MetodePembayaran::class, 'id_metode', 'id_metode');
+    }
+
+    public function penghuni()
+    {
+        return $this->belongsTo(Penghuni::class, 'id_penghuni');
+    }
+
+    public function kontrakSewa()
+    {
+        return $this->belongsTo(KontrakSewa::class, 'id_kontrak');
     }
 
     // Relasi ke Supplier

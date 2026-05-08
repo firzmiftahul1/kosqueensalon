@@ -6,6 +6,8 @@ use App\Filament\Resources\TransaksiPembayaranResource\Pages;
 use App\Models\TransaksiPembayaran;
 use App\Models\MetodePembayaran;
 use App\Models\Supplier;
+use App\Models\Penghuni;
+use App\Models\KontrakSewa;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -51,6 +53,22 @@ class TransaksiPembayaranResource extends Resource
                     ])
                     ->required()
                     ->label('Jenis Transaksi'),
+
+                // 👤 Penghuni (opsional)
+                Select::make('id_penghuni')
+                    ->label('Penghuni')
+                    ->options(Penghuni::query()->orderBy('nama_penghuni')->pluck('nama_penghuni', 'id'))
+                    ->searchable()
+                    ->nullable()
+                    ->placeholder('Pilih penghuni (opsional)'),
+
+                // 📄 Kontrak Sewa (opsional)
+                Select::make('id_kontrak')
+                    ->label('Kontrak Sewa')
+                    ->options(KontrakSewa::query()->orderBy('kode_kontrak')->pluck('kode_kontrak', 'id'))
+                    ->searchable()
+                    ->nullable()
+                    ->placeholder('Pilih kontrak (opsional)'),
 
                 // 💳 Metode Pembayaran
                 Select::make('id_metode')
@@ -104,6 +122,15 @@ class TransaksiPembayaranResource extends Resource
                         'pemasukan' => 'success',
                         'pengeluaran' => 'danger',
                     }),
+
+                TextColumn::make('penghuni.nama_penghuni')
+                    ->label('Penghuni')
+                    ->placeholder('-')
+                    ->searchable(),
+
+                TextColumn::make('kontrakSewa.kode_kontrak')
+                    ->label('Kontrak')
+                    ->placeholder('-'),
 
                 TextColumn::make('metodePembayaran.nama_metode')
                     ->label('Metode Bayar')
