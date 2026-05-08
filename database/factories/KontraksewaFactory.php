@@ -2,18 +2,16 @@
 
 namespace Database\Factories;
 
+use App\Models\KontrakSewa;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\kontraksewa>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\KontrakSewa>
  */
-class KontraksewaFactory extends Factory
+class KontrakSewaFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = KontrakSewa::class;
+
     public function definition(): array
     {
         return [

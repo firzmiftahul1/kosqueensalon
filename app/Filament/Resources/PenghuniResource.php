@@ -20,17 +20,31 @@ class PenghuniResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama')
+                Forms\Components\TextInput::make('kode_penghuni')
+                    ->label('Kode Penghuni')
+                    ->default(fn () => Penghuni::getKodePenghuni())
+                    ->required()
+                    ->readonly()
+                    ->maxLength(10),
+
+                Forms\Components\TextInput::make('nama_penghuni')
+                    ->label('Nama Penghuni')
                     ->required()
                     ->maxLength(255),
+
+                Forms\Components\TextInput::make('nik')
+                    ->label('NIK')
+                    ->required()
+                    ->maxLength(20)
+                    ->unique(ignoreRecord: true),
 
                 Forms\Components\Textarea::make('alamat')
                     ->required(),
 
-                Forms\Components\TextInput::make('no_hp')
-                    ->label('No HP')
+                Forms\Components\TextInput::make('nomor_telepon')
+                    ->label('Nomor Telepon')
                     ->required()
-                    ->maxLength(15),
+                    ->maxLength(20),
 
                 Forms\Components\Select::make('jenis_kelamin')
                     ->options([
@@ -45,15 +59,25 @@ class PenghuniResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama')
+                Tables\Columns\TextColumn::make('kode_penghuni')
+                    ->label('Kode')
                     ->searchable()
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('nama_penghuni')
+                    ->label('Nama')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('nik')
+                    ->label('NIK')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('nomor_telepon')
+                    ->label('Telepon'),
+
                 Tables\Columns\TextColumn::make('alamat')
                     ->limit(30),
-
-                Tables\Columns\TextColumn::make('no_hp')
-                    ->label('No HP'),
 
                 Tables\Columns\TextColumn::make('jenis_kelamin'),
 
