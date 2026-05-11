@@ -33,15 +33,22 @@ class KamarResource extends Resource
                     ->required()
                     ->readonly(),
 
-                TextInput::make('nomor_kamar')
+                TextInput::make('nama_kamar')
+                    ->label('Nama Kamar')
                     ->required()
-                    ->placeholder('Masukkan nomor kamar'),
+                    ->placeholder('Masukkan nama kamar'),
 
-                TextInput::make('harga_kamar')
+                TextInput::make('tipe_kamar')
+                    ->label('Tipe Kamar')
+                    ->placeholder('Masukkan tipe kamar'),
+
+                TextInput::make('harga')
+                    ->label('Harga Sewa')
                     ->required()
                     ->numeric()
                     ->minValue(0)
-                    ->placeholder('Masukkan harga kamar'),
+                    ->prefix('Rp')
+                    ->placeholder('Masukkan harga sewa'),
 
                 Select::make('status_kamar')
                     ->options([
@@ -62,12 +69,18 @@ class KamarResource extends Resource
                 TextColumn::make('kode_kamar')
                     ->searchable(),
 
-                TextColumn::make('nomor_kamar')
+                TextColumn::make('nama_kamar')
+                    ->label('Nama Kamar')
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('harga_kamar')
+                TextColumn::make('tipe_kamar')
+                    ->label('Tipe')
+                    ->sortable(),
+
+                TextColumn::make('harga')
                     ->label('Harga')
+                    ->money('IDR')
                     ->sortable(),
 
                 TextColumn::make('status_kamar')
