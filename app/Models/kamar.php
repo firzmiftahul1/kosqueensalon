@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+use App\Models\KontrakSewa;
+use Illuminate\Support\Facades\DB;
+
+class Kamar extends Model
+{
+    use HasFactory;
+
+    protected $table = 'kamars';
+
+    protected $fillable = [
+        'kode_kamar',
+        'nama_kamar',
+        'tipe_kamar',
+        'harga',
+        'status_kamar',
+    ];
+
+    protected $casts = [
+        'harga' => 'decimal:2',
+    ];
+
+    public static function getKodeKamar()
+    {
+        // Ambil nilai kode_kamar terbesar saja
+        $latest = self::max('kode_kamar');
+
+        // Jika data masih kosong, set ke KM000
+        if (!$latest) {
+            $latest = 'KMR000';
+        }
+
+        // Ambil 3 angka terakhir, tambah 1
+        $noAwal = substr($latest, -3);
+        $noAkhir = (int)$noAwal + 1;
+
+        // Susun kode baru
+        return 'KMR' . str_pad($noAkhir, 3, "0", STR_PAD_LEFT);
+    }
+
+    public function kontrakSewas()
+    {
+        return $this->hasMany(KontrakSewa::class, 'kamar_id');
+    }
+
+    public function operasionals()
+{
+    return $this->hasMany(OperasionalBarang::class, 'barang_id');
+}
+}
