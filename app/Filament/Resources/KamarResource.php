@@ -33,11 +33,11 @@ class KamarResource extends Resource
                     ->required()
                     ->readonly(),
 
-                TextInput::make('nomor_kamar')
+                TextInput::make('nama_kamar')
                     ->required()
-                    ->placeholder('Masukkan nomor kamar'),
+                    ->placeholder('Masukkan nama kamar'),
 
-                TextInput::make('harga_kamar')
+                TextInput::make('harga')
                     ->required()
                     ->numeric()
                     ->minValue(0)
@@ -47,6 +47,7 @@ class KamarResource extends Resource
                     ->options([
                         'kosong' => 'Kosong',
                         'terisi' => 'Terisi',
+                        
                     ])
                     ->required()
                     ->placeholder('Pilih status kamar'),
@@ -62,11 +63,11 @@ class KamarResource extends Resource
                 TextColumn::make('kode_kamar')
                     ->searchable(),
 
-                TextColumn::make('nomor_kamar')
+                TextColumn::make('nama_kamar')
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('harga_kamar')
+                TextColumn::make('harga')
                     ->label('Harga')
                     ->sortable(),
 
