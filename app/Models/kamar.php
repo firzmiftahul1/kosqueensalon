@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+use App\Models\KontrakSewa;
 use Illuminate\Support\Facades\DB;
 
 class Kamar extends Model
@@ -17,7 +19,11 @@ class Kamar extends Model
         'nama_kamar',
         'tipe_kamar',
         'harga',
-        'status_kamar'
+        'status_kamar',
+    ];
+
+    protected $casts = [
+        'harga' => 'decimal:2',
     ];
 
     public static function getKodeKamar()
@@ -36,5 +42,10 @@ class Kamar extends Model
 
         // Susun kode baru
         return 'KM' . str_pad($noAkhir, 3, "0", STR_PAD_LEFT);
+    }
+
+    public function kontrakSewas()
+    {
+        return $this->hasMany(KontrakSewa::class, 'kamar_id');
     }
 }

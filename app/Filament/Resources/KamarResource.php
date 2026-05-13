@@ -41,7 +41,8 @@ class KamarResource extends Resource
                     ->required()
                     ->numeric()
                     ->minValue(0)
-                    ->placeholder('Masukkan harga kamar'),
+                    ->prefix('Rp')
+                    ->placeholder('Masukkan harga sewa'),
 
                 Select::make('status_kamar')
                     ->options([
@@ -69,6 +70,7 @@ class KamarResource extends Resource
 
                 TextColumn::make('harga')
                     ->label('Harga')
+                    ->money('IDR')
                     ->sortable(),
 
                 TextColumn::make('status_kamar')
