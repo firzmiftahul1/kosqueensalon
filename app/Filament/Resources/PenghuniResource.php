@@ -20,28 +20,15 @@ class PenghuniResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('kode_penghuni')
-                    ->label('Kode Penghuni')
-                    ->default(fn () => Penghuni::getKodePenghuni())
-                    ->required()
-                    ->readonly()
-                    ->maxLength(10),
-
-                Forms\Components\TextInput::make('nama_penghuni')
+                Forms\Components\TextInput::make('nama')
                     ->label('Nama Penghuni')
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('nik')
-                    ->label('NIK')
-                    ->required()
-                    ->maxLength(20)
-                    ->unique(ignoreRecord: true),
-
                 Forms\Components\Textarea::make('alamat')
                     ->required(),
 
-                Forms\Components\TextInput::make('nomor_telepon')
+                Forms\Components\TextInput::make('no_hp')
                     ->label('Nomor Telepon')
                     ->required()
                     ->maxLength(20),
@@ -59,22 +46,14 @@ class PenghuniResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('kode_penghuni')
-                    ->label('Kode')
-                    ->searchable()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('nama_penghuni')
+                Tables\Columns\TextColumn::make('nama')
                     ->label('Nama')
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('nik')
-                    ->label('NIK')
+                Tables\Columns\TextColumn::make('no_hp')
+                    ->label('Telepon')
                     ->searchable(),
-
-                Tables\Columns\TextColumn::make('nomor_telepon')
-                    ->label('Telepon'),
 
                 Tables\Columns\TextColumn::make('alamat')
                     ->limit(30),
@@ -90,7 +69,7 @@ class PenghuniResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(), // 🔥 tambahin ini biar bisa hapus
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -101,9 +80,7 @@ class PenghuniResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

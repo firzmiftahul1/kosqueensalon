@@ -2,14 +2,19 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\PengeluaranPenghuniExporter;
 use App\Filament\Resources\PengeluaranPenghuniResource\Pages;
+use App\Mail\Tesmail;
 use App\Models\PengeluaranPenghuni;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Table;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
 
 class PengeluaranPenghuniResource extends Resource
 {
@@ -27,7 +32,6 @@ class PengeluaranPenghuniResource extends Resource
     {
         return $form
             ->schema([
-
                 Forms\Components\Select::make('penghuni_id')
                     ->relationship('penghuni', 'nama')
                     ->searchable()
@@ -63,7 +67,6 @@ class PengeluaranPenghuniResource extends Resource
     {
         return $table
             ->columns([
-
                 Tables\Columns\TextColumn::make('penghuni.nama')
                     ->label('Nama Penghuni')
                     ->searchable(),
@@ -97,7 +100,6 @@ class PengeluaranPenghuniResource extends Resource
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('success')
                     ->action(function () {
-
                         $data = PengeluaranPenghuni::with('penghuni')->get();
 
                         $pdf = Pdf::loadView(
@@ -110,6 +112,15 @@ class PengeluaranPenghuniResource extends Resource
                             'pengeluaran-penghuni.pdf'
                         );
                     }),
+                ExportAction::make()->exporter(PengeluaranPenghuniExporter::class),
+                Tables\Actions\Action::make('kirimEmail')
+                    ->label('Kirim Email')
+                    ->icon('heroicon-o-envelope')
+                    ->color('info')
+                    ->action(function () {
+                        Mail::to('test@example.com')->send(new Tesmail());
+                    })
+                    ->successNotificationTitle('Email berhasil dikirim!'),
             ])
 
             ->filters([
@@ -124,6 +135,7 @@ class PengeluaranPenghuniResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    ExportBulkAction::make()->exporter(PengeluaranPenghuniExporter::class),
                 ]),
             ]);
     }
