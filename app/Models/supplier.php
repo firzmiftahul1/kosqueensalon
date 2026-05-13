@@ -42,4 +42,9 @@ class Supplier extends Model
     {
         $this->attributes['nomor_telepon'] = str_replace([' ', '-', '.'], '', $value);
     }
+
+    public function pengeluaranOperasionals()
+{
+    return $this->hasMany(PengeluaranOperasional::class, 'kode_supplier', 'kode_supplier');
+}
 }

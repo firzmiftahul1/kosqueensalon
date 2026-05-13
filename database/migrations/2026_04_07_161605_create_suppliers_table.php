@@ -11,16 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supplier', function (Blueprint $table) {
-            $table->id();
-            $table->string('kode_supplier');
-            $table->string('kategori');
-            $table->string('nama_supplier');
-            $table->string('contact_person');
-            $table->string('nomor_telepon');
-            $table->text('alamat');
-            $table->timestamps();
-        });
+       Schema::create('supplier', function (Blueprint $table) {
+    $table->id();
+
+    $table->string('kode_supplier')->unique();
+
+    $table->string('kategori');
+    $table->string('nama_supplier');
+    $table->string('contact_person');
+    $table->string('nomor_telepon');
+    $table->text('alamat');
+
+    $table->timestamps();
+});
     }
 
     /**
