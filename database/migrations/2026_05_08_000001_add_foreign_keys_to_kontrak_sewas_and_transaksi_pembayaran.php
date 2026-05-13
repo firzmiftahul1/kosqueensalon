@@ -9,9 +9,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (Schema::hasTable('kontraksewa')) {
-            Schema::table('kontraksewa', function (Blueprint $table): void {
-                if (!self::foreignKeyExists('kontraksewa', 'penghuni_id')) {
+        if (Schema::hasTable('kontrak_sewas')) {
+            Schema::table('kontrak_sewas', function (Blueprint $table): void {
+                if (!self::foreignKeyExists('kontrak_sewas', 'penghuni_id')) {
                     $table->foreign('penghuni_id')
                         ->references('id')
                         ->on('penghunis')

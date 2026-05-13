@@ -12,7 +12,7 @@ class PengeluaranPenghuni extends Model
     protected $table = 'pengeluaran_penghunis';
 
     protected $fillable = [
-        'penghunis_id',
+        'penghuni_id',
         'nama_pengeluaran',
         'keterangan',
         'nominal',

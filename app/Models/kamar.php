@@ -33,7 +33,7 @@ class Kamar extends Model
 
         // Jika data masih kosong, set ke KM000
         if (!$latest) {
-            $latest = 'KMR000';
+            $latest = 'KM000';
         }
 
         // Ambil 3 angka terakhir, tambah 1
@@ -41,16 +41,11 @@ class Kamar extends Model
         $noAkhir = (int)$noAwal + 1;
 
         // Susun kode baru
-        return 'KMR' . str_pad($noAkhir, 3, "0", STR_PAD_LEFT);
+        return 'KM' . str_pad($noAkhir, 3, "0", STR_PAD_LEFT);
     }
 
     public function kontrakSewas()
     {
         return $this->hasMany(KontrakSewa::class, 'kamar_id');
     }
-
-    public function operasionals()
-{
-    return $this->hasMany(OperasionalBarang::class, 'barang_id');
-}
 }
