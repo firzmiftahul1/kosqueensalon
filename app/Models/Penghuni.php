@@ -10,7 +10,7 @@ class Penghuni extends Model
 {
     use HasFactory;
 
-    protected $table = 'penghuni';
+    protected $table = 'penghunis';
 
     protected $fillable = [
         'kode_penghuni',
