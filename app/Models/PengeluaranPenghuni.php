@@ -9,7 +9,7 @@ class PengeluaranPenghuni extends Model
 {
     use HasFactory;
 
-    protected $table = 'pengeluaran_penghunis';
+    protected $table = 'pengeluaran_penghunis'; // ← diubah, hapus huruf "s"
 
     protected $fillable = [
         'penghuni_id',
@@ -20,9 +20,6 @@ class PengeluaranPenghuni extends Model
         'status',
     ];
 
-    /**
-     * Relasi ke model Penghuni
-     */
     public function penghuni()
     {
         return $this->belongsTo(Penghuni::class);

@@ -52,23 +52,29 @@ class TransaksiPembayaranResource extends Resource
                         'pengeluaran' => 'Pengeluaran',
                     ])
                     ->required()
+                    ->live() // Membuat form bereaksi ketika nilai berubah
                     ->label('Jenis Transaksi'),
 
-                // 👤 Penghuni (opsional)
+                // 👤 Penghuni (Hanya muncul jika pemasukan)
                 Select::make('id_penghuni')
                     ->label('Penghuni')
                     ->options(Penghuni::query()->orderBy('nama_penghuni')->pluck('nama_penghuni', 'id'))
                     ->searchable()
                     ->nullable()
-                    ->placeholder('Pilih penghuni (opsional)'),
+                    ->visible(fn (Forms\Get $get): bool => $get('jenis_transaksi') === 'pemasukan')
+                    ->placeholder('Pilih penghuni'),
 
-                // 📄 Kontrak Sewa (opsional)
+                // 📄 Kontrak Sewa (Hanya muncul jika pemasukan dan idealnya yang status aktif)
                 Select::make('id_kontrak')
                     ->label('Kontrak Sewa')
-                    ->options(KontrakSewa::query()->orderBy('kode_kontrak')->pluck('kode_kontrak', 'id'))
+                    ->options(KontrakSewa::query()
+                        ->where('status_kontrak', 'Aktif') // Misal diasumsikan kolom status bernama status_kontrak
+                        ->orderBy('kode_kontrak')
+                        ->pluck('kode_kontrak', 'id'))
                     ->searchable()
                     ->nullable()
-                    ->placeholder('Pilih kontrak (opsional)'),
+                    ->visible(fn (Forms\Get $get): bool => $get('jenis_transaksi') === 'pemasukan')
+                    ->placeholder('Pilih kontrak aktif'),
 
                 // 💳 Metode Pembayaran
                 Select::make('id_metode')
@@ -77,13 +83,14 @@ class TransaksiPembayaranResource extends Resource
                     ->required()
                     ->searchable(),
 
-                // 🏢 Supplier (opsional, untuk pengeluaran)
+                // 🏢 Supplier (Hanya muncul jika pengeluaran)
                 Select::make('id_supplier')
                     ->label('Supplier')
                     ->options(Supplier::pluck('nama_supplier', 'id'))
                     ->searchable()
                     ->nullable()
-                    ->placeholder('Pilih supplier (opsional)'),
+                    ->visible(fn (Forms\Get $get): bool => $get('jenis_transaksi') === 'pengeluaran')
+                    ->placeholder('Pilih supplier'),
 
                 // 💵 Total Bayar
                 TextInput::make('total_bayar')
@@ -158,6 +165,13 @@ class TransaksiPembayaranResource extends Resource
             ])
             ->defaultSort('tanggal', 'desc')
             ->actions([
+                Tables\Actions\Action::make('cetak_invoice')
+                    ->label('Cetak Invoice')
+                    ->icon('heroicon-o-printer')
+                    ->color('success')
+                    ->url(fn (TransaksiPembayaran $record) => route('transaksi.invoice', $record->id_transaksi))
+                    ->openUrlInNewTab()
+                    ->visible(fn (TransaksiPembayaran $record): bool => $record->jenis_transaksi === 'pemasukan'),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

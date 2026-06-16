@@ -20,20 +20,28 @@ class PenghuniResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama')
+                Forms\Components\TextInput::make('nama_penghuni')
                     ->label('Nama Penghuni')
                     ->required()
                     ->maxLength(255),
 
+                Forms\Components\TextInput::make('nik')
+                    ->label('NIK / No Identitas')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(20),
+
                 Forms\Components\Textarea::make('alamat')
+                    ->label('Alamat')
                     ->required(),
 
-                Forms\Components\TextInput::make('no_hp')
+                Forms\Components\TextInput::make('nomor_telepon')
                     ->label('Nomor Telepon')
                     ->required()
                     ->maxLength(20),
 
                 Forms\Components\Select::make('jenis_kelamin')
+                    ->label('Jenis Kelamin')
                     ->options([
                         'Laki-laki' => 'Laki-laki',
                         'Perempuan' => 'Perempuan',
@@ -46,22 +54,33 @@ class PenghuniResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama')
+                Tables\Columns\TextColumn::make('kode_penghuni')
+                    ->label('Kode')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('nama_penghuni')
                     ->label('Nama')
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('no_hp')
+                Tables\Columns\TextColumn::make('nik')
+                    ->label('NIK')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('nomor_telepon')
                     ->label('Telepon')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('alamat')
                     ->limit(30),
 
-                Tables\Columns\TextColumn::make('jenis_kelamin'),
+                Tables\Columns\TextColumn::make('jenis_kelamin')
+                    ->label('Jenis Kelamin'),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Tgl Bergabung')
+                    ->dateTime('d M Y')
                     ->sortable(),
             ])
             ->filters([

@@ -47,10 +47,12 @@ class PemasukanLainResource extends Resource
                     ->required(),
 
                 Forms\Components\Select::make('jenis')
+                    ->label('Jenis Tagihan')
                     ->options([
-                        'listrik' => 'Listrik',
-                        'wifi' => 'WiFi',
-                        'air' => 'Air',
+                        'Denda telat bayar' => 'Denda telat bayar',
+                        'Pembayaran AC' => 'Pembayaran AC',
+                        'Kunci hilang' => 'Denda kunci hilang',
+                        'Kerusakan Fasilitas' => 'Denda kerusakan fasilitas',
                     ])
                     ->required(),
 
@@ -98,7 +100,8 @@ class PemasukanLainResource extends Resource
                 Tables\Columns\TextColumn::make('kamar.nama_kamar')
                     ->label('Kamar'),
 
-                Tables\Columns\TextColumn::make('jenis'),
+                Tables\Columns\TextColumn::make('jenis')
+                    ->label('Jenis Tagihan'),
 
                 Tables\Columns\TextColumn::make('total')
                     ->money('IDR', true),

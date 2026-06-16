@@ -23,3 +23,10 @@ Route::get('/tes-email', function () {
     Mail::to('test@example.com')->send(new Tesmail());
     return 'Email berhasil dikirim!';
 });
+
+Route::get('/transaksi/{id}/invoice', function ($id) {
+    $transaksi = \App\Models\TransaksiPembayaran::with(['penghuni', 'kontrakSewa', 'metodePembayaran'])->findOrFail($id);
+    
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.invoice', ['transaksi' => $transaksi]);
+    return $pdf->stream('Invoice-' . $transaksi->id_transaksi . '.pdf');
+})->name('transaksi.invoice');
