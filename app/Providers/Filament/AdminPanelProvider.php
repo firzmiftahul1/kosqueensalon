@@ -42,9 +42,11 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
-                DashboardStatCards::class,
-                PendapatanPerBulanChart::class,
-                AiTrendBarangWidget::class,
+
+                \App\Filament\Widgets\PemasukanLainStats::class,
+                \App\Filament\Widgets\TotalPemasukanLainChart::class,
+                \App\Filament\Widgets\PemasukanLainPieChart::class,
+
             ])
             ->middleware([
                 EncryptCookies::class,
