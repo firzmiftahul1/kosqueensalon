@@ -9,19 +9,19 @@ class MarketTrend extends Model
 {
     use HasFactory;
 
-    // tambahan penyebutan tabel secara eksplisit
-    protected $table = 'market_trend';
+    // Menyebutkan nama tabel secara eksplisit agar mengarah ke tabel hasil migration kamu
+    protected $table = 'market_trend_barangs';
 
-    // Kolom yang boleh diisi manual atau lewat create()
+    // Kolom yang diizinkan untuk diisi secara massal
     protected $fillable = [
         'nama_tren',
         'analisis_ai',
         'referensi_visual',
-        'saran_bahan',
+        'saran_barang',
         'warna_populer',
     ];
 
-    // Casting agar Laravel otomatis mengubah JSON menjadi Array saat diakses
+    // Otomatis mengubah JSON database menjadi Array di PHP
     protected $casts = [
         'referensi_visual' => 'array',
     ];
