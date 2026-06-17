@@ -20,25 +20,19 @@ class PenghuniResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('kode_penghuni')
-                    ->label('Kode Penghuni')
-                    ->default(fn () => Penghuni::getKodePenghuni())
-                    ->required()
-                    ->readonly()
-                    ->maxLength(10),
-
                 Forms\Components\TextInput::make('nama_penghuni')
                     ->label('Nama Penghuni')
                     ->required()
                     ->maxLength(255),
 
                 Forms\Components\TextInput::make('nik')
-                    ->label('NIK')
+                    ->label('NIK / No Identitas')
                     ->required()
-                    ->maxLength(20)
-                    ->unique(ignoreRecord: true),
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(20),
 
                 Forms\Components\Textarea::make('alamat')
+                    ->label('Alamat')
                     ->required(),
 
                 Forms\Components\TextInput::make('nomor_telepon')
@@ -47,6 +41,7 @@ class PenghuniResource extends Resource
                     ->maxLength(20),
 
                 Forms\Components\Select::make('jenis_kelamin')
+                    ->label('Jenis Kelamin')
                     ->options([
                         'Laki-laki' => 'Laki-laki',
                         'Perempuan' => 'Perempuan',
@@ -74,15 +69,18 @@ class PenghuniResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('nomor_telepon')
-                    ->label('Telepon'),
+                    ->label('Telepon')
+                    ->searchable(),
 
                 Tables\Columns\TextColumn::make('alamat')
                     ->limit(30),
 
-                Tables\Columns\TextColumn::make('jenis_kelamin'),
+                Tables\Columns\TextColumn::make('jenis_kelamin')
+                    ->label('Jenis Kelamin'),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Tgl Bergabung')
+                    ->dateTime('d M Y')
                     ->sortable(),
             ])
             ->filters([
@@ -90,7 +88,7 @@ class PenghuniResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(), // 🔥 tambahin ini biar bisa hapus
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -101,9 +99,7 @@ class PenghuniResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

@@ -48,6 +48,7 @@ class SupplierResource extends Resource
                         'internet' => 'Internet',
                         'kebersihan' => 'Kebersihan',
                         'maintenance' => 'Maintenance',
+                        'galon' => 'galon',
                         'lainnya' => 'Lainnya',
                     ])
                     ->required(),

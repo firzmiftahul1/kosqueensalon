@@ -42,14 +42,14 @@ class Penghuni extends Model
         });
     }
 
-    public function kontrakSewas()
+    public function kontrakSewa()
     {
         return $this->hasMany(KontrakSewa::class, 'penghuni_id');
     }
 
-    public function transaksiPembayarans()
+    public function transaksiPembayaran()
     {
-        return $this->hasMany(TransaksiPembayaran::class, 'id_penghuni');
+        return $this->hasMany(TransaksiPembayaran::class, 'penghuni_id');
     }
 
     public function setNomorTeleponAttribute($value): void

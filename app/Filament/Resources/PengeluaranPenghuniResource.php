@@ -2,14 +2,20 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\PengeluaranPenghuniExporter;
 use App\Filament\Resources\PengeluaranPenghuniResource\Pages;
+use App\Mail\Tesmail;
 use App\Models\PengeluaranPenghuni;
+use App\Services\FonnteService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Table;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
 
 class PengeluaranPenghuniResource extends Resource
 {
@@ -17,23 +23,23 @@ class PengeluaranPenghuniResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static ?string $navigationLabel = 'Pengeluaran Penghuni';
+    protected static ?string $navigationLabel = 'Pembayaran Penghuni';
 
-    protected static ?string $modelLabel = 'Pengeluaran Penghuni';
+    protected static ?string $modelLabel = 'Pembayaran Penghuni';
 
-    protected static ?string $pluralModelLabel = 'Pengeluaran Penghuni';
+    protected static ?string $pluralModelLabel = 'Pembayaran Penghuni';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-
                 Forms\Components\Select::make('penghuni_id')
-                    ->relationship('penghuni', 'nama_penghuni')
+                    ->relationship('penghuni', 'nama')
                     ->searchable()
                     ->required(),
 
                 Forms\Components\TextInput::make('nama_pengeluaran')
+                    ->label('Nama Pembayaran')
                     ->required()
                     ->maxLength(255),
 
@@ -46,6 +52,7 @@ class PengeluaranPenghuniResource extends Resource
                     ->required(),
 
                 Forms\Components\DatePicker::make('tanggal_pengeluaran')
+                    ->label('Tanggal Pembayaran')
                     ->required(),
 
                 Forms\Components\Select::make('status')
@@ -63,12 +70,12 @@ class PengeluaranPenghuniResource extends Resource
     {
         return $table
             ->columns([
-
                 Tables\Columns\TextColumn::make('penghuni.nama')
                     ->label('Nama Penghuni')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('nama_pengeluaran')
+                    ->label('Nama Pembayaran')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('nominal')
@@ -76,6 +83,7 @@ class PengeluaranPenghuniResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('tanggal_pengeluaran')
+                    ->label('Tanggal Pembayaran')
                     ->date()
                     ->sortable(),
 
@@ -97,7 +105,6 @@ class PengeluaranPenghuniResource extends Resource
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('success')
                     ->action(function () {
-
                         $data = PengeluaranPenghuni::with('penghuni')->get();
 
                         $pdf = Pdf::loadView(
@@ -107,9 +114,18 @@ class PengeluaranPenghuniResource extends Resource
 
                         return response()->streamDownload(
                             fn () => print($pdf->output()),
-                            'pengeluaran-penghuni.pdf'
+                            'pembayaran-penghuni.pdf'
                         );
                     }),
+                ExportAction::make()->exporter(PengeluaranPenghuniExporter::class),
+                Tables\Actions\Action::make('kirimEmail')
+                    ->label('Kirim Email')
+                    ->icon('heroicon-o-envelope')
+                    ->color('info')
+                    ->action(function () {
+                        Mail::to('test@example.com')->send(new Tesmail());
+                    })
+                    ->successNotificationTitle('Email berhasil dikirim!'),
             ])
 
             ->filters([
@@ -117,13 +133,34 @@ class PengeluaranPenghuniResource extends Resource
             ])
 
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->after(function ($record) {
+                        if ($record->status === 'dibayar') {
+                            $nomor = $record->penghuni->no_hp;
+                            $nama = $record->penghuni->nama;
+                            $nominal = number_format($record->nominal, 0, ',', '.');
+                            $tanggal = $record->tanggal_pengeluaran;
+                            $jenis = $record->nama_pengeluaran;
+
+                            $pesan = "Halo *{$nama}*! 👋\n\n";
+                            $pesan .= "Pembayaran kamu sudah *dikonfirmasi* ✅\n\n";
+                            $pesan .= "Detail Pembayaran:\n";
+                            $pesan .= "- Jenis: *{$jenis}*\n";
+                            $pesan .= "- Nominal: *Rp {$nominal}*\n";
+                            $pesan .= "- Tanggal: *{$tanggal}*\n\n";
+                            $pesan .= "Terima kasih! 🙏\n";
+                            $pesan .= "_Kost Queens Salon_";
+
+                            FonnteService::send($nomor, $pesan);
+                        }
+                    }),
                 Tables\Actions\DeleteAction::make(),
             ])
 
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    ExportBulkAction::make()->exporter(PengeluaranPenghuniExporter::class),
                 ]),
             ]);
     }

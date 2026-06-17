@@ -1,0 +1,23 @@
+@import '/vendor/filament/filament/resources/css/theme.css';
+
+.fi-main {
+    background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    min-height: 100vh;
+}
+
+.fi-main::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(2px);
+    z-index: 0;
+}
+
+.fi-main > * {
+    position: relative;
+    z-index: 1;
+}

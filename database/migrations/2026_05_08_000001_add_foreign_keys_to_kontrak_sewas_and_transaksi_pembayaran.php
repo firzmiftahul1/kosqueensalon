@@ -4,14 +4,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use App\Filament\Widgets\DashboardStatCards;
+use App\Filament\Widgets\PendapatanPerBulanChart;
+use App\Filament\Widgets\AiTrendBarangWidget;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        if (Schema::hasTable('kontraksewa')) {
-            Schema::table('kontraksewa', function (Blueprint $table): void {
-                if (!self::foreignKeyExists('kontraksewa', 'penghuni_id')) {
+        if (Schema::hasTable('kontrak_sewas')) {
+            Schema::table('kontrak_sewas', function (Blueprint $table): void {
+                if (!self::foreignKeyExists('kontrak_sewas', 'penghuni_id')) {
                     $table->foreign('penghuni_id')
                         ->references('id')
                         ->on('penghunis')
